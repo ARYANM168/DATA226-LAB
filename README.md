@@ -50,8 +50,6 @@ Snowflake ANALYTICS tables
 Tableau Public dashboard
 ```
 
-![System Architecture](docs/system_architecture.png)
-
 ## Technology Stack
 
 | Component | Technology | Purpose |
@@ -185,10 +183,6 @@ The implementation uses:
   - `weather_past_days`
   - `weather_forecast_days`
 
-![Airflow DAG](docs/airflow_dag.png)
-
-![Airflow Variables and Connection](docs/airflow_variables.png)
-
 ## dbt Project
 
 The dbt project includes:
@@ -207,8 +201,6 @@ dbt run
 dbt test
 dbt snapshot
 ```
-
-![dbt Commands](docs/dbt_commands.png)
 
 ## Tableau Dashboard
 
@@ -234,10 +226,6 @@ The dashboard includes:
 - Dry spell length charts
 - City comparison filters
 - Date range filters
-
-![Tableau Dashboard Overview](docs/tableau_dashboard_1.png)
-
-![Tableau Dashboard with a Different Date Range](docs/tableau_dashboard_2.png)
 
 ## Setup Instructions
 
