@@ -349,9 +349,6 @@ This project demonstrates an end-to-end weather analytics workflow. Airflow coll
 - Tableau. [Tableau Public](https://www.tableau.com/products/public)
 
 ## GitHub Repository
-
-Add your repository link here:
-
 ```text
 https://github.com/ARYANM168/DATA226-LAB.git
 ```
