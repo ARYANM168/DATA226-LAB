@@ -1,0 +1,13 @@
+name: weather_analytics
+version: "1.0.0"
+config-version: 2
+profile: weather
+
+model-paths: ["models"]
+
+models:
+  weather_analytics:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

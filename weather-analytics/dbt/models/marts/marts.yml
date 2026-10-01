@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: fct_weather_metrics
+    description: >
+      Daily weather metrics per city (observed + 16-day forecast): moving averages,
+      temperature anomaly vs the previous 30 days, rolling rainfall and dry-spell length.
+    columns:
+      - name: weather_id
+        tests: [unique, not_null]
+      - name: city
+        tests: [not_null]
+      - name: data_type
+        tests:
+          - accepted_values:
+              values: ['Observed', 'Forecast']
+      - name: temp_ma_7d
+        description: 7-day moving average of daily mean temperature (°C)
+      - name: temp_anomaly
+        description: Daily mean temperature minus the average of the previous 30 days (°C)
+      - name: rainfall_7d_mm
+        description: Total precipitation over the last 7 days (mm)
+      - name: dry_spell_length_days
+        description: Consecutive days with < 1 mm precipitation, including this day
+        tests: [not_null]
+
+  - name: city_weather_summary
+    description: One row per city with headline numbers for KPI tiles.
+    columns:
+      - name: city
+        tests: [unique, not_null]

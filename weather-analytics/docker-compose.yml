@@ -1,0 +1,56 @@
+# Weather Prediction Analytics — Airflow + dbt + Superset (Snowflake is the warehouse)
+# Start everything:   docker compose up -d --build
+# Airflow UI:         http://localhost:8080   (admin / admin)
+# Superset UI:        http://localhost:8088   (admin / admin)
+
+services:
+  airflow:
+    build: ./airflow
+    container_name: weather-airflow
+    env_file: .env
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/db/airflow.db
+      AIRFLOW__WEBSERVER__SECRET_KEY: weather-local-secret
+      # dbt writes its build output here instead of your project folder
+      DBT_TARGET_PATH: /tmp/dbt_target
+      DBT_LOG_PATH: /tmp/dbt_logs
+      DBT_PROFILES_DIR: /opt/airflow/dbt
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./dbt:/opt/airflow/dbt
+      - ./keys:/opt/airflow/keys
+      - ./scripts:/opt/airflow/scripts
+      - airflow-db:/opt/airflow/db
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "airflow db migrate &&
+               (airflow users create --username admin --password admin --firstname Admin
+                 --lastname User --role Admin --email admin@example.com || true) &&
+               (airflow scheduler &) &&
+               exec airflow webserver"
+
+  superset:
+    build: ./superset
+    container_name: weather-superset
+    env_file: .env
+    environment:
+      SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+    volumes:
+      - ./superset/superset_config.py:/app/pythonpath/superset_config.py:ro
+      - ./keys:/app/keys:ro
+      - superset-home:/app/superset_home
+    ports:
+      - "8088:8088"
+    command: >
+      bash -c "superset db upgrade &&
+               (superset fab create-admin --username admin --password admin --firstname Admin
+                 --lastname User --email admin@example.com || true) &&
+               superset init &&
+               superset run -h 0.0.0.0 -p 8088 --with-threads"
+
+volumes:
+  airflow-db:
+  superset-home:
